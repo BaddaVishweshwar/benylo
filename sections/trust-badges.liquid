@@ -1,0 +1,311 @@
+{% comment %}
+  Trust Badges Section
+  Displays trust signals like free shipping, secure checkout, etc.
+{% endcomment %}
+
+{{ 'custom-theme.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .trust-badges-section {
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+    background: {{ section.settings.background_color }};
+  }
+  
+  .trust-badges-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .trust-badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .trust-badge-item {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    border-radius: var(--radius-lg, 12px);
+    background: {{ section.settings.badge_background }};
+    border: 1px solid {{ section.settings.badge_border }};
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .trust-badge-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+  }
+  
+  .trust-badge-item:hover::before {
+    left: 100%;
+  }
+  
+  .trust-badge-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  
+  .trust-badge-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    color: white;
+    font-size: 28px;
+    transition: transform 0.3s ease;
+  }
+  
+  .trust-badge-item:hover .trust-badge-icon {
+    transform: scale(1.1) rotate(5deg);
+  }
+  
+  .trust-badge-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: {{ section.settings.text_color }};
+  }
+  
+  .trust-badge-description {
+    font-size: 0.875rem;
+    color: {{ section.settings.text_color_light }};
+    line-height: 1.6;
+  }
+  
+  @media (max-width: 768px) {
+    .trust-badges-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .trust-badge-item {
+      padding: 1.5rem 1rem;
+    }
+  }
+{%- endstyle -%}
+
+<section class="trust-badges-section">
+  <div class="trust-badges-container">
+    {% if section.settings.heading != blank %}
+      <h2 class="trust-badges-heading" style="text-align: center; font-size: 2rem; margin-bottom: 1rem; color: {{ section.settings.text_color }};">
+        {{ section.settings.heading }}
+      </h2>
+    {% endif %}
+    
+    {% if section.settings.subheading != blank %}
+      <p class="trust-badges-subheading" style="text-align: center; color: {{ section.settings.text_color_light }}; max-width: 600px; margin: 0 auto;">
+        {{ section.settings.subheading }}
+      </p>
+    {% endif %}
+    
+    <div class="trust-badges-grid">
+      {% for block in section.blocks %}
+        <div class="trust-badge-item animate-fade-in-up delay-{{ forloop.index | times: 100 }}" {{ block.shopify_attributes }}>
+          <div class="trust-badge-icon">
+            {% if block.settings.icon == 'shipping' %}
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 32px; height: 32px;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+              </svg>
+            {% elsif block.settings.icon == 'returns' %}
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 32px; height: 32px;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            {% elsif block.settings.icon == 'secure' %}
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 32px; height: 32px;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            {% elsif block.settings.icon == 'support' %}
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 32px; height: 32px;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            {% elsif block.settings.icon == 'quality' %}
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 32px; height: 32px;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            {% else %}
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 32px; height: 32px;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            {% endif %}
+          </div>
+          
+          <h3 class="trust-badge-title">{{ block.settings.title }}</h3>
+          <p class="trust-badge-description">{{ block.settings.description }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Trust Badges",
+  "tag": "section",
+  "class": "section-trust-badges",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Why Shop With Us"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "We're committed to providing you with the best shopping experience"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "badge_background",
+      "label": "Badge Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "badge_border",
+      "label": "Badge Border",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111827"
+    },
+    {
+      "type": "color",
+      "id": "text_color_light",
+      "label": "Light Text Color",
+      "default": "#6b7280"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Trust Badge",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {
+              "value": "shipping",
+              "label": "Free Shipping"
+            },
+            {
+              "value": "returns",
+              "label": "Easy Returns"
+            },
+            {
+              "value": "secure",
+              "label": "Secure Checkout"
+            },
+            {
+              "value": "support",
+              "label": "24/7 Support"
+            },
+            {
+              "value": "quality",
+              "label": "Quality Guarantee"
+            }
+          ],
+          "default": "shipping"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Free Shipping"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "On orders over $50"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust Badges",
+      "blocks": [
+        {
+          "type": "badge",
+          "settings": {
+            "icon": "shipping",
+            "title": "Free Shipping",
+            "description": "On orders over $50"
+          }
+        },
+        {
+          "type": "badge",
+          "settings": {
+            "icon": "returns",
+            "title": "Easy Returns",
+            "description": "30-day return policy"
+          }
+        },
+        {
+          "type": "badge",
+          "settings": {
+            "icon": "secure",
+            "title": "Secure Checkout",
+            "description": "SSL encrypted payment"
+          }
+        },
+        {
+          "type": "badge",
+          "settings": {
+            "icon": "support",
+            "title": "24/7 Support",
+            "description": "Dedicated customer service"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

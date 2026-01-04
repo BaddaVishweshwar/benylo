@@ -1,0 +1,381 @@
+{% comment %}
+  Pet Store Hero Section - Snitch-Inspired Design
+  Professional, minimalist hero with bold typography
+{% endcomment %}
+
+{{ 'pet-store-professional.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .pet-hero-section-{{ section.id }} {
+    position: relative;
+    min-height: {{ section.settings.section_height }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: {{ section.settings.background_color }};
+    overflow: hidden;
+  }
+  
+  .pet-hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: {{ section.settings.image_opacity | divided_by: 100.0 }};
+  }
+  
+  .pet-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: {{ section.settings.overlay_color }};
+    opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+  }
+  
+  .pet-hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: {{ section.settings.text_alignment }};
+    padding: 80px 24px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .pet-hero-eyebrow {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: {{ section.settings.eyebrow_color }};
+    margin-bottom: 16px;
+  }
+  
+  .pet-hero-title {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: {{ section.settings.title_color }};
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+  
+  .pet-hero-subtitle {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    color: {{ section.settings.subtitle_color }};
+    font-weight: 400;
+    margin-bottom: 40px;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-left: {% if section.settings.text_alignment == 'center' %}auto{% else %}0{% endif %};
+    margin-right: {% if section.settings.text_alignment == 'center' %}auto{% else %}0{% endif %};
+  }
+  
+  .pet-hero-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: {{ section.settings.text_alignment }};
+  }
+  
+  .pet-hero-btn {
+    display: inline-block;
+    padding: 16px 48px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid;
+  }
+  
+  .pet-hero-btn-primary {
+    background: {{ section.settings.primary_button_bg }};
+    color: {{ section.settings.primary_button_text }};
+    border-color: {{ section.settings.primary_button_bg }};
+  }
+  
+  .pet-hero-btn-primary:hover {
+    background: transparent;
+    color: {{ section.settings.primary_button_bg }};
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  }
+  
+  .pet-hero-btn-secondary {
+    background: transparent;
+    color: {{ section.settings.secondary_button_text }};
+    border-color: {{ section.settings.secondary_button_border }};
+  }
+  
+  .pet-hero-btn-secondary:hover {
+    background: {{ section.settings.secondary_button_border }};
+    color: #FFFFFF;
+    transform: translateY(-2px);
+  }
+  
+  @media (max-width: 768px) {
+    .pet-hero-section-{{ section.id }} {
+      min-height: {{ section.settings.mobile_height }}px;
+    }
+    
+    .pet-hero-content {
+      padding: 60px 20px;
+    }
+    
+    .pet-hero-title {
+      font-size: 2rem;
+    }
+    
+    .pet-hero-subtitle {
+      font-size: 1rem;
+    }
+    
+    .pet-hero-buttons {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .pet-hero-btn {
+      text-align: center;
+    }
+  }
+{%- endstyle -%}
+
+<section class="pet-hero-section-{{ section.id }}">
+  {% if section.settings.background_image != blank %}
+    <img 
+      src="{{ section.settings.background_image | img_url: '2000x' }}" 
+      alt="{{ section.settings.title }}"
+      class="pet-hero-background"
+      loading="eager"
+    >
+  {% endif %}
+  
+  <div class="pet-hero-overlay"></div>
+  
+  <div class="pet-hero-content">
+    {% if section.settings.eyebrow_text != blank %}
+      <div class="pet-hero-eyebrow">{{ section.settings.eyebrow_text }}</div>
+    {% endif %}
+    
+    <h1 class="pet-hero-title">{{ section.settings.title }}</h1>
+    
+    {% if section.settings.subtitle != blank %}
+      <p class="pet-hero-subtitle">{{ section.settings.subtitle }}</p>
+    {% endif %}
+    
+    <div class="pet-hero-buttons">
+      {% if section.settings.primary_button_text != blank %}
+        <a href="{{ section.settings.primary_button_link }}" class="pet-hero-btn pet-hero-btn-primary">
+          {{ section.settings.primary_button_text }}
+        </a>
+      {% endif %}
+      
+      {% if section.settings.secondary_button_text != blank %}
+        <a href="{{ section.settings.secondary_button_link }}" class="pet-hero-btn pet-hero-btn-secondary">
+          {{ section.settings.secondary_button_text }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Pet Store Hero",
+  "tag": "section",
+  "class": "section-pet-hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "min": 400,
+      "max": 900,
+      "step": 50,
+      "unit": "px",
+      "label": "Desktop Height",
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "min": 300,
+      "max": 700,
+      "step": 50,
+      "unit": "px",
+      "label": "Mobile Height",
+      "default": 500
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "range",
+      "id": "image_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Image Opacity",
+      "default": 100
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#F7F7F7"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay Opacity",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Eyebrow Text",
+      "default": "NEW COLLECTION"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "PREMIUM PET SUPPLIES"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Discover our curated collection of premium pet products designed for your furry friends"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_text",
+      "label": "Primary Button Text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_link",
+      "label": "Primary Button Link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text",
+      "label": "Secondary Button Text",
+      "default": "VIEW COLLECTION"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Secondary Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#FF6B35"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "primary_button_bg",
+      "label": "Primary Button Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "primary_button_text",
+      "label": "Primary Button Text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_text",
+      "label": "Secondary Button Text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_border",
+      "label": "Secondary Button Border",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pet Store Hero"
+    }
+  ]
+}
+{% endschema %}

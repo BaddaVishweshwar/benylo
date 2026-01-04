@@ -1,0 +1,281 @@
+{% comment %}
+  Product Urgency Elements
+  Displays stock counters, countdown timers, and social proof
+  Usage: {% render 'product-urgency', product: product %}
+{% endcomment %}
+
+{{ 'custom-theme.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .product-urgency-container {
+    margin: 1.5rem 0;
+  }
+  
+  .urgency-element {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-left: 4px solid #f59e0b;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    animation: fadeInUp 0.5s ease-out;
+  }
+  
+  .urgency-element.low-stock {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border-left-color: #ef4444;
+  }
+  
+  .urgency-element.high-demand {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    border-left-color: #3b82f6;
+  }
+  
+  .urgency-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    color: #92400e;
+  }
+  
+  .urgency-element.low-stock .urgency-icon {
+    color: #991b1b;
+  }
+  
+  .urgency-element.high-demand .urgency-icon {
+    color: #1e40af;
+  }
+  
+  .urgency-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #78350f;
+    margin: 0;
+  }
+  
+  .urgency-element.low-stock .urgency-text {
+    color: #7f1d1d;
+  }
+  
+  .urgency-element.high-demand .urgency-text {
+    color: #1e3a8a;
+  }
+  
+  .urgency-text strong {
+    font-weight: 800;
+  }
+  
+  .countdown-urgency {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+    border-left: 4px solid #ec4899;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+  }
+  
+  .countdown-urgency-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #831843;
+  }
+  
+  .countdown-timer-small {
+    display: inline-flex;
+    gap: 0.375rem;
+    margin-left: 0.5rem;
+  }
+  
+  .countdown-timer-small .timer-segment {
+    background: rgba(236, 72, 153, 0.2);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 800;
+    color: #831843;
+    min-width: 32px;
+    text-align: center;
+  }
+  
+  .social-proof {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    animation: fadeInUp 0.5s ease-out 0.2s backwards;
+  }
+  
+  .social-proof-icon {
+    width: 20px;
+    height: 20px;
+    color: #10b981;
+  }
+  
+  .social-proof-text {
+    font-size: 0.875rem;
+    color: #374151;
+    margin: 0;
+  }
+  
+  .viewing-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #4f46e5;
+    margin-bottom: 0.75rem;
+  }
+  
+  .viewing-count-dot {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .urgency-element,
+    .countdown-urgency,
+    .social-proof {
+      padding: 0.75rem 0.875rem;
+    }
+    
+    .urgency-text,
+    .countdown-urgency-text,
+    .social-proof-text {
+      font-size: 0.8125rem;
+    }
+  }
+</style>
+
+<div class="product-urgency-container">
+  {% comment %} Low Stock Warning {% endcomment %}
+  {% if product.selected_or_first_available_variant.inventory_quantity <= 10 and product.selected_or_first_available_variant.inventory_quantity > 0 %}
+    <div class="urgency-element low-stock">
+      <svg class="urgency-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+      </svg>
+      <p class="urgency-text">
+        <strong>Only {{ product.selected_or_first_available_variant.inventory_quantity }} left in stock!</strong> Order soon before it's gone.
+      </p>
+    </div>
+  {% endif %}
+  
+  {% comment %} High Demand Indicator {% endcomment %}
+  <div class="urgency-element high-demand">
+    <svg class="urgency-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+    </svg>
+    <p class="urgency-text">
+      <strong>High Demand:</strong> This item is selling fast!
+    </p>
+  </div>
+  
+  {% comment %} Limited Time Offer Countdown {% endcomment %}
+  <div class="countdown-urgency">
+    <svg style="width: 24px; height: 24px; color: #be185d;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </svg>
+    <div>
+      <p class="countdown-urgency-text">
+        ⚡ Limited Time Offer Ends In:
+        <span class="countdown-timer-small" id="product-countdown-{{ product.id }}">
+          <span class="timer-segment" data-hours>00</span>
+          <span>:</span>
+          <span class="timer-segment" data-minutes>00</span>
+          <span>:</span>
+          <span class="timer-segment" data-seconds>00</span>
+        </span>
+      </p>
+    </div>
+  </div>
+  
+  {% comment %} People Viewing {% endcomment %}
+  <div class="viewing-count">
+    <span class="viewing-count-dot"></span>
+    <span id="viewing-count-{{ product.id }}">12</span> people are viewing this right now
+  </div>
+  
+  {% comment %} Recent Purchase Social Proof {% endcomment %}
+  <div class="social-proof">
+    <svg class="social-proof-icon" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+    </svg>
+    <p class="social-proof-text">
+      <strong>Sarah M.</strong> from New York purchased this 2 hours ago
+    </p>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // Countdown timer
+    const countdownEl = document.getElementById('product-countdown-{{ product.id }}');
+    if (countdownEl) {
+      // Set end time to 24 hours from now
+      const endTime = new Date().getTime() + (24 * 60 * 60 * 1000);
+      
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = endTime - now;
+        
+        if (distance < 0) {
+          countdownEl.innerHTML = '<span style="color: #991b1b; font-weight: 800;">EXPIRED</span>';
+          return;
+        }
+        
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        const hoursEl = countdownEl.querySelector('[data-hours]');
+        const minutesEl = countdownEl.querySelector('[data-minutes]');
+        const secondsEl = countdownEl.querySelector('[data-seconds]');
+        
+        if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+        if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
+        if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
+      }
+      
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    }
+    
+    // Random viewing count (8-25 people)
+    const viewingCountEl = document.getElementById('viewing-count-{{ product.id }}');
+    if (viewingCountEl) {
+      const randomCount = Math.floor(Math.random() * 18) + 8;
+      viewingCountEl.textContent = randomCount;
+      
+      // Update count every 10-30 seconds
+      setInterval(function() {
+        const change = Math.random() > 0.5 ? 1 : -1;
+        let currentCount = parseInt(viewingCountEl.textContent);
+        currentCount = Math.max(5, Math.min(30, currentCount + change));
+        viewingCountEl.textContent = currentCount;
+      }, (Math.random() * 20000) + 10000);
+    }
+  })();
+</script>

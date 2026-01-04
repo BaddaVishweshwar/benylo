@@ -1,0 +1,344 @@
+{% comment %}
+  Pet Category Tiles - Snitch-Inspired Design
+  Bold image backgrounds with overlay text
+{% endcomment %}
+
+{{ 'pet-store-professional.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .pet-categories-section-{{ section.id }} {
+    padding: {{ section.settings.padding_top }}px 24px {{ section.settings.padding_bottom }}px;
+    background: {{ section.settings.background_color }};
+  }
+  
+  .pet-categories-container {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  
+  .pet-categories-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  
+  .pet-categories-title {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: {{ section.settings.title_color }};
+    margin-bottom: 16px;
+  }
+  
+  .pet-categories-subtitle {
+    font-size: 1rem;
+    color: {{ section.settings.subtitle_color }};
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .pet-categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax({{ section.settings.min_tile_width }}px, 1fr));
+    gap: {{ section.settings.grid_gap }}px;
+  }
+  
+  .pet-category-tile {
+    position: relative;
+    height: {{ section.settings.tile_height }}px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .pet-category-tile:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+  
+  .pet-category-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .pet-category-tile:hover .pet-category-image {
+    transform: scale(1.08);
+  }
+  
+  .pet-category-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 40px 32px;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
+    transition: all 0.4s ease;
+  }
+  
+  .pet-category-tile:hover .pet-category-overlay {
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 70%, transparent 100%);
+  }
+  
+  .pet-category-name {
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    letter-spacing: 2px;
+    margin: 0 0 8px 0;
+    line-height: 1.2;
+  }
+  
+  .pet-category-count {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .pet-category-link {
+    text-decoration: none;
+    display: block;
+    height: 100%;
+  }
+  
+  @media (max-width: 768px) {
+    .pet-categories-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    
+    .pet-category-tile {
+      height: {{ section.settings.mobile_tile_height }}px;
+    }
+    
+    .pet-category-overlay {
+      padding: 24px 20px;
+    }
+    
+    .pet-category-name {
+      font-size: 1.5rem;
+    }
+  }
+{%- endstyle -%}
+
+<section class="pet-categories-section-{{ section.id }}">
+  <div class="pet-categories-container">
+    {% if section.settings.show_header %}
+      <div class="pet-categories-header">
+        <h2 class="pet-categories-title">{{ section.settings.section_title }}</h2>
+        {% if section.settings.section_subtitle != blank %}
+          <p class="pet-categories-subtitle">{{ section.settings.section_subtitle }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+    
+    <div class="pet-categories-grid">
+      {% for block in section.blocks %}
+        <div class="pet-category-tile" {{ block.shopify_attributes }}>
+          <a href="{{ block.settings.category_link }}" class="pet-category-link">
+            {% if block.settings.category_image != blank %}
+              <img 
+                src="{{ block.settings.category_image | img_url: '800x' }}" 
+                alt="{{ block.settings.category_name }}"
+                class="pet-category-image"
+                loading="lazy"
+              >
+            {% else %}
+              <div class="pet-category-image" style="background: linear-gradient(135deg, #FF6B35 0%, #F7B731 100%);"></div>
+            {% endif %}
+            
+            <div class="pet-category-overlay">
+              <h3 class="pet-category-name">{{ block.settings.category_name }}</h3>
+              {% if block.settings.product_count != blank %}
+                <p class="pet-category-count">{{ block.settings.product_count }} Products</p>
+              {% endif %}
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Pet Category Tiles",
+  "tag": "section",
+  "class": "section-pet-categories",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_header",
+      "label": "Show Section Header",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "SHOP BY CATEGORY"
+    },
+    {
+      "type": "textarea",
+      "id": "section_subtitle",
+      "label": "Section Subtitle",
+      "default": "Explore our premium collection for your pets"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "min_tile_width",
+      "min": 250,
+      "max": 500,
+      "step": 50,
+      "unit": "px",
+      "label": "Minimum Tile Width",
+      "default": 350
+    },
+    {
+      "type": "range",
+      "id": "tile_height",
+      "min": 300,
+      "max": 600,
+      "step": 50,
+      "unit": "px",
+      "label": "Desktop Tile Height",
+      "default": 450
+    },
+    {
+      "type": "range",
+      "id": "mobile_tile_height",
+      "min": 200,
+      "max": 400,
+      "step": 50,
+      "unit": "px",
+      "label": "Mobile Tile Height",
+      "default": 300
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 8,
+      "max": 32,
+      "step": 4,
+      "unit": "px",
+      "label": "Grid Gap",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category Tile",
+      "settings": [
+        {
+          "type": "text",
+          "id": "category_name",
+          "label": "Category Name",
+          "default": "DOGS"
+        },
+        {
+          "type": "image_picker",
+          "id": "category_image",
+          "label": "Category Image"
+        },
+        {
+          "type": "url",
+          "id": "category_link",
+          "label": "Category Link"
+        },
+        {
+          "type": "text",
+          "id": "product_count",
+          "label": "Product Count",
+          "default": "150"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pet Category Tiles",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "category_name": "DOGS",
+            "product_count": "200"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "category_name": "CATS",
+            "product_count": "150"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "category_name": "TOYS",
+            "product_count": "100"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "category_name": "ACCESSORIES",
+            "product_count": "75"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

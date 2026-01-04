@@ -1,0 +1,338 @@
+{% comment %}
+  Announcement Bar with Countdown Timer
+  Displays promotional messages with optional countdown
+{% endcomment %}
+
+{{ 'custom-theme.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .announcement-bar {
+    background: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding: 12px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    z-index: 100;
+  }
+  
+  .announcement-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    animation: shimmer 3s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+  
+  .announcement-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .announcement-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    margin: 0;
+  }
+  
+  .announcement-text strong {
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+  
+  .countdown-timer {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  
+  .countdown-segment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    min-width: 40px;
+  }
+  
+  .countdown-number {
+    font-size: 1.125rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+  
+  .countdown-label {
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    opacity: 0.9;
+    margin-top: 2px;
+  }
+  
+  .countdown-separator {
+    font-weight: 800;
+    font-size: 1.125rem;
+  }
+  
+  .announcement-cta {
+    display: inline-block;
+    padding: 0.375rem 1rem;
+    background: {{ section.settings.button_background }};
+    color: {{ section.settings.button_text }};
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+  
+  .announcement-cta:hover {
+    transform: scale(1.05);
+    border-color: {{ section.settings.button_text }};
+  }
+  
+  .close-announcement {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: {{ section.settings.text_color }};
+    cursor: pointer;
+    padding: 0.25rem;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+  }
+  
+  .close-announcement:hover {
+    opacity: 1;
+  }
+  
+  .announcement-bar.hidden {
+    display: none;
+  }
+  
+  @media (max-width: 768px) {
+    .announcement-bar {
+      padding: 10px 40px 10px 20px;
+    }
+    
+    .announcement-content {
+      gap: 0.5rem;
+    }
+    
+    .announcement-text {
+      font-size: 0.75rem;
+    }
+    
+    .countdown-segment {
+      min-width: 35px;
+      padding: 0.2rem 0.4rem;
+    }
+    
+    .countdown-number {
+      font-size: 1rem;
+    }
+    
+    .countdown-label {
+      font-size: 0.5rem;
+    }
+    
+    .announcement-cta {
+      padding: 0.3rem 0.8rem;
+      font-size: 0.75rem;
+    }
+  }
+{%- endstyle -%}
+
+<div class="announcement-bar" id="announcement-bar-{{ section.id }}">
+  <div class="announcement-content">
+    <p class="announcement-text">
+      {{ section.settings.announcement_text }}
+    </p>
+    
+    {% if section.settings.show_countdown %}
+      <div class="countdown-timer" id="countdown-{{ section.id }}">
+        <div class="countdown-segment">
+          <span class="countdown-number" data-days>00</span>
+          <span class="countdown-label">Days</span>
+        </div>
+        <span class="countdown-separator">:</span>
+        <div class="countdown-segment">
+          <span class="countdown-number" data-hours>00</span>
+          <span class="countdown-label">Hrs</span>
+        </div>
+        <span class="countdown-separator">:</span>
+        <div class="countdown-segment">
+          <span class="countdown-number" data-minutes>00</span>
+          <span class="countdown-label">Min</span>
+        </div>
+        <span class="countdown-separator">:</span>
+        <div class="countdown-segment">
+          <span class="countdown-number" data-seconds>00</span>
+          <span class="countdown-label">Sec</span>
+        </div>
+      </div>
+    {% endif %}
+    
+    {% if section.settings.cta_text != blank and section.settings.cta_link != blank %}
+      <a href="{{ section.settings.cta_link }}" class="announcement-cta">
+        {{ section.settings.cta_text }}
+      </a>
+    {% endif %}
+  </div>
+  
+  {% if section.settings.dismissible %}
+    <button class="close-announcement" onclick="closeAnnouncement('{{ section.id }}')" aria-label="Close announcement">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+  {% endif %}
+</div>
+
+<script>
+  {% if section.settings.show_countdown %}
+    (function() {
+      const countdownElement = document.getElementById('countdown-{{ section.id }}');
+      const endDate = new Date('{{ section.settings.countdown_end_date }}').getTime();
+      
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = endDate - now;
+        
+        if (distance < 0) {
+          countdownElement.innerHTML = '<span style="font-weight: 700;">Offer Ended</span>';
+          return;
+        }
+        
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        const daysEl = countdownElement.querySelector('[data-days]');
+        const hoursEl = countdownElement.querySelector('[data-hours]');
+        const minutesEl = countdownElement.querySelector('[data-minutes]');
+        const secondsEl = countdownElement.querySelector('[data-seconds]');
+        
+        if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
+        if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+        if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
+        if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
+      }
+      
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    })();
+  {% endif %}
+  
+  function closeAnnouncement(sectionId) {
+    const bar = document.getElementById('announcement-bar-' + sectionId);
+    if (bar) {
+      bar.classList.add('hidden');
+      localStorage.setItem('announcement-bar-' + sectionId + '-closed', 'true');
+    }
+  }
+  
+  // Check if announcement was previously closed
+  (function() {
+    const sectionId = '{{ section.id }}';
+    const wasClosed = localStorage.getItem('announcement-bar-' + sectionId + '-closed');
+    if (wasClosed === 'true') {
+      const bar = document.getElementById('announcement-bar-' + sectionId);
+      if (bar) bar.classList.add('hidden');
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "tag": "section",
+  "class": "section-announcement-bar",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "announcement_text",
+      "label": "Announcement Text",
+      "default": "<p><strong>SALE:</strong> Get 20% off your first order! Use code WELCOME20</p>"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#6366f1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_countdown",
+      "label": "Show Countdown Timer",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "countdown_end_date",
+      "label": "Countdown End Date",
+      "info": "Format: YYYY-MM-DD HH:MM:SS (e.g., 2026-12-31 23:59:59)",
+      "default": "2026-12-31 23:59:59"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button Text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text",
+      "label": "Button Text Color",
+      "default": "#6366f1"
+    },
+    {
+      "type": "checkbox",
+      "id": "dismissible",
+      "label": "Allow Dismissal",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement Bar"
+    }
+  ]
+}
+{% endschema %}

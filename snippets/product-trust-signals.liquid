@@ -1,0 +1,233 @@
+{% comment %}
+  Product Trust Signals
+  Displays security badges, guarantees, and trust indicators
+  Usage: {% render 'product-trust-signals' %}
+{% endcomment %}
+
+<style>
+  .product-trust-signals {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .trust-signals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+  }
+  
+  .trust-signal-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .trust-signal-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  
+  .trust-signal-icon {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border-radius: 50%;
+    color: white;
+  }
+  
+  .trust-signal-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .trust-signal-content {
+    flex: 1;
+  }
+  
+  .trust-signal-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 0.25rem 0;
+  }
+  
+  .trust-signal-description {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.4;
+  }
+  
+  .payment-badges {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .payment-badges-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.75rem;
+    text-align: center;
+  }
+  
+  .payment-icons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  
+  .payment-icon {
+    width: 50px;
+    height: 32px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.625rem;
+    font-weight: 700;
+    color: #6b7280;
+    transition: all 0.3s ease;
+  }
+  
+  .payment-icon:hover {
+    border-color: #6366f1;
+    transform: scale(1.05);
+  }
+  
+  .security-seal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #10b981;
+  }
+  
+  .security-seal-icon {
+    width: 24px;
+    height: 24px;
+    color: #10b981;
+  }
+  
+  .security-seal-text {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #065f46;
+    margin: 0;
+  }
+  
+  @media (max-width: 768px) {
+    .product-trust-signals {
+      padding: 1rem;
+    }
+    
+    .trust-signals-grid {
+      grid-template-columns: 1fr;
+      gap: 0.875rem;
+    }
+    
+    .trust-signal-item {
+      padding: 0.625rem;
+    }
+  }
+</style>
+
+<div class="product-trust-signals">
+  <div class="trust-signals-grid">
+    <div class="trust-signal-item">
+      <div class="trust-signal-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+        </svg>
+      </div>
+      <div class="trust-signal-content">
+        <h4 class="trust-signal-title">Secure Checkout</h4>
+        <p class="trust-signal-description">SSL encrypted payment processing</p>
+      </div>
+    </div>
+    
+    <div class="trust-signal-item">
+      <div class="trust-signal-icon" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+      </div>
+      <div class="trust-signal-content">
+        <h4 class="trust-signal-title">30-Day Returns</h4>
+        <p class="trust-signal-description">Easy returns & full refund guarantee</p>
+      </div>
+    </div>
+    
+    <div class="trust-signal-item">
+      <div class="trust-signal-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <div class="trust-signal-content">
+        <h4 class="trust-signal-title">Quality Guaranteed</h4>
+        <p class="trust-signal-description">Premium quality or your money back</p>
+      </div>
+    </div>
+    
+    <div class="trust-signal-item">
+      <div class="trust-signal-icon" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+        </svg>
+      </div>
+      <div class="trust-signal-content">
+        <h4 class="trust-signal-title">Free Shipping</h4>
+        <p class="trust-signal-description">On orders over $50 worldwide</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="payment-badges">
+    <p class="payment-badges-title">We Accept</p>
+    <div class="payment-icons">
+      <div class="payment-icon" style="color: #1434CB; font-weight: 800;">VISA</div>
+      <div class="payment-icon" style="color: #EB001B; font-weight: 800;">MC</div>
+      <div class="payment-icon" style="color: #0079C1; font-weight: 800;">AMEX</div>
+      <div class="payment-icon" style="color: #003087; font-weight: 800;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M20.905 9.5h-2.864a.5.5 0 00-.477.345l-1.564 4.31-1.564-4.31a.5.5 0 00-.477-.345H10.095a.5.5 0 00-.477.655l2.864 7.69a.5.5 0 00.477.345h2.282a.5.5 0 00.477-.345l2.864-7.69a.5.5 0 00-.477-.655z" fill="#003087"/>
+          <path d="M9.5 9.5H6.636a.5.5 0 00-.477.345l-2.864 7.69a.5.5 0 00.477.655h2.282a.5.5 0 00.477-.345l.573-1.536h3.282l.573 1.536a.5.5 0 00.477.345h2.282a.5.5 0 00.477-.655l-2.864-7.69A.5.5 0 009.5 9.5z" fill="#0079C1"/>
+        </svg>
+      </div>
+      <div class="payment-icon" style="color: #5F6368; font-weight: 800;">GPay</div>
+      <div class="payment-icon" style="color: #000000; font-weight: 800;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+  
+  <div class="security-seal">
+    <svg class="security-seal-icon" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+    </svg>
+    <p class="security-seal-text">🔒 Secure 256-bit SSL Encryption</p>
+  </div>
+</div>
